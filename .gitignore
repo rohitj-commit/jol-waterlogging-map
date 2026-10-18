@@ -1,0 +1,22 @@
+# Local OmniRush configuration and installed tooling
+.opencode/
+opencode.jsonc
+node_modules/
+
+# Private runtime reports and uploads; server.py regenerates sample reports
+data/
+uploads/
+
+# Credentials, environments, and logs
+.env
+.env.*
+!.env.example
+*.log
+.venv/
+venv/
+
+# Python and operating-system caches
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

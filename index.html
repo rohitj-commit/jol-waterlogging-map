@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Jol — know before you go</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 15v4h14v-4"/></symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M12 9v3l2 1"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4m0 0c5-4 9 4 14 0v9c-5 4-9-4-14 0"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></symbol>
+  </svg>
+
+  <div class="login-overlay" id="loginOverlay">
+    <section class="login-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <div class="brand login-brand"><span class="brand-mark">j</span><span>jol</span><span class="brand-dot"></span></div>
+      <p class="eyebrow">WELCOME BACK</p><h1 id="loginTitle">Know before you go.</h1>
+      <p class="login-copy">Sign in to see live flood reports and help your neighbours stay safe.</p>
+      <form id="loginForm" novalidate>
+        <label class="login-label" for="loginName">Your name</label><input class="login-input" id="loginName" type="text" autocomplete="name" placeholder="e.g. Arjun" maxlength="40" required>
+        <label class="login-label" for="loginEmail">Email address</label><input class="login-input" id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <label class="login-label" for="loginPassword">Password</label><input class="login-input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" required>
+        <p class="login-hint">Demo name: <strong>Arjun</strong> · Demo: <strong>demo@jol.app</strong> / <strong>jol-demo</strong></p>
+        <div class="login-error" id="loginError" role="alert" hidden></div>
+        <button class="primary-button full login-submit" id="loginSubmit" type="submit">Continue to Jol <svg><use href="#i-chevron"/></svg></button>
+      </form>
+    </section>
+  </div>
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="brand-mark">j</span><span>jol</span><span class="brand-dot"></span></div>
+      <p class="sidebar-label">YOUR CITY</p>
+       <button class="city-select" id="citySelect" type="button" aria-label="Selected city"><span class="city-dot"></span> <span id="selectedCity">Bengaluru</span> <span class="city-arrow">⌄</span></button>
+      <nav class="nav" aria-label="Primary navigation">
+         <button class="nav-item active" type="button" data-view="map"><span class="nav-icon">⌖</span><span>Live map</span><span class="nav-count">12</span></button>
+         <button class="nav-item" type="button" data-view="reports"><span class="nav-icon">♧</span><span>My reports</span></button>
+         <button class="nav-item" type="button" data-view="saved"><span class="nav-icon">♧</span><span>Saved places</span></button>
+      </nav>
+       <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-icon">?</span><div><strong>How Jol works</strong><p>See a flood? Help your neighbours.</p></div></div>
+         <button class="profile" id="profileButton" type="button"><span class="avatar" id="profileAvatar">AS</span><span><strong id="profileName">Community member</strong><small>Community member · Sign out</small></span><span class="profile-more">↪</span></button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuBtn" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
+        <div class="breadcrumb"><span>Jol</span><span>/</span><strong>Live map</strong></div>
+         <div class="top-actions"><button class="icon-button" aria-label="Search"><svg><use href="#i-search"/></svg></button><button class="avatar small" id="topAvatar">AS</button></div>
+      </header>
+      <div class="page-content">
+        <section class="page-heading">
+          <div><p class="eyebrow">THURSDAY, 24 OCTOBER · 10:42 AM</p><h1>Good morning, <span id="greetingName">there</span> <span class="wave">✦</span></h1><p class="heading-copy">Stay a step ahead of the water around you.</p></div>
+          <button class="primary-button" id="openUpload"><svg><use href="#i-plus"/></svg> Report a flood</button>
+        </section>
+
+        <section class="notice" aria-label="Weather update"><span class="weather-symbol">☁</span><div><strong>Rain is expected today</strong><span>Light showers in your area until 2:00 PM. Roads may change quickly.</span></div><button class="notice-link" type="button">View forecast <svg><use href="#i-chevron"/></svg></button></section>
+
+         <section class="app-view" data-view="map">
+         <section class="map-card">
+           <div class="map-toolbar"><div class="map-title"><span class="live-dot"></span><strong>Flood reports near <span id="mapCity">Bengaluru</span></strong><span class="updated">Community-reported</span></div><div class="map-actions"><label class="search-field"><svg><use href="#i-search"/></svg><input id="mapSearch" placeholder="Search a city" aria-label="Search a city" autocomplete="off"><div class="city-search-results" id="citySearchResults" hidden></div></label><button class="map-control" id="locateBtn" title="Use current location"><svg><use href="#i-locate"/></svg><span>My location</span></button><button class="map-control save-place-button" id="savePlaceBtn" type="button" title="Save this city">☆ <span>Save place</span></button></div></div>
+          <div class="filter-row"><span class="filter-label">SHOWING</span><button class="filter active" data-filter="all">All reports <b>12</b></button><button class="filter" data-filter="safe">Passable <b>7</b></button><button class="filter" data-filter="caution">Caution <b>3</b></button><button class="filter" data-filter="blocked">Blocked <b>2</b></button><button class="filter-toggle" id="toggleRoads"><span class="toggle on"></span> Traffic view</button></div>
+          <div class="map" id="map" role="application" aria-label="Flood reports map">
+            <div class="map-water water-one"></div><div class="map-water water-two"></div>
+            <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div><div class="road road-d"></div><div class="road road-e"></div>
+            <div class="map-label label-one">INDIRANAGAR</div><div class="map-label label-two">DOMLUR</div><div class="map-label label-three">HALASURU LAKE</div>
+            <div class="route route-one"></div><div class="route route-two"></div>
+            <div class="map-marker marker-blue" data-id="1" style="left:27%;top:43%"><span>0.4m</span></div>
+            <div class="map-marker marker-amber" data-id="2" style="left:60%;top:29%"><span>0.8m</span></div>
+            <div class="map-marker marker-red" data-id="3" style="left:72%;top:64%"><span>1.2m</span></div>
+            <div class="map-marker marker-blue" data-id="4" style="left:43%;top:71%"><span>0.2m</span></div>
+            <div class="map-marker marker-amber" data-id="5" style="left:82%;top:38%"><span>0.6m</span></div>
+            <div class="you-are-here" style="left:48%;top:46%"><span></span><b>You</b></div>
+             <article class="selected-report-card" id="selectedReport" aria-live="polite"><button class="detail-close" id="closeDetail" aria-label="Close report details"><svg><use href="#i-close"/></svg></button><span class="status safe" id="detailStatus">PASSABLE</span><h3 id="detailPlace">100 Feet Road, Indiranagar</h3><p id="detailMeta">Reported 8 min ago · 0.4m estimated</p><p class="detail-observation" id="detailObservation">Community-reported · Medium confidence</p><div class="route-safety"><span class="safety-check"><svg><use href="#i-check"/></svg></span><span><strong id="detailSafety">You can get through with care</strong><small>Suggested route is open</small></span></div></article>
+            <div class="map-zoom"><button type="button" aria-label="Zoom in">+</button><button type="button" aria-label="Zoom out">−</button></div>
+            <div class="map-legend"><span><i class="legend-dot blue"></i>Passable</span><span><i class="legend-dot amber"></i>Use caution</span><span><i class="legend-dot red"></i>Blocked</span></div>
+          </div>
+         </section>
+
+        <p class="accuracy-note"><strong>Safety note:</strong> Data is community-reported. Water-depth estimates are advisory and not guaranteed; Jol does not claim real-time accuracy without live sensors or a real vision model.</p><section class="below-map"><div><div class="section-heading"><div><p class="eyebrow">NEAR YOU</p><h2>Recent reports</h2></div><button class="text-button" id="viewAll">View all <svg><use href="#i-chevron"/></svg></button></div><div class="report-list" id="reportList"></div></div><aside class="side-tip"><span class="tip-spark">✦</span><p class="eyebrow">QUICK TIP</p><h3>One photo can keep a whole street moving.</h3><p>When you report, add a reference object like a car tyre or kerb to help us estimate depth.</p><button class="text-button" id="tipReport">Report now <svg><use href="#i-chevron"/></svg></button></aside></section>
+         </section>
+         <section class="app-view content-view" data-view="reports" hidden>
+           <div class="view-heading"><p class="eyebrow">YOUR ACTIVITY</p><h2>My reports</h2><p>Reports you have shared with the community from this device.</p></div>
+           <div class="view-list" id="myReportList"></div>
+         </section>
+         <section class="app-view content-view" data-view="saved" hidden>
+           <div class="view-heading"><p class="eyebrow">QUICK ACCESS</p><h2>Saved places</h2><p>Keep the cities you check most close at hand.</p></div>
+           <div class="view-list" id="savedPlaceList"></div>
+         </section>
+       </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="uploadModal" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="closeUpload" aria-label="Close"><svg><use href="#i-close"/></svg></button><div class="modal-header"><span class="modal-kicker">HELP YOUR NEIGHBOURS</span><h2 id="modalTitle">Report a flooded street</h2><p>Upload a photo and Jol will estimate the water depth for everyone nearby.</p></div><div class="upload-step" id="uploadStep"><label class="dropzone" id="dropzone" for="fileInput"><input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp"><span class="drop-icon"><svg><use href="#i-upload"/></svg></span><strong>Drop a photo here</strong><span>or <u>browse your device</u></span><small>JPG, PNG or WEBP · Max 10MB</small></label><div class="modal-error" id="modalError" role="alert" hidden></div><button class="secondary-button full" id="demoPhoto" type="button">Use a sample photo instead</button></div><div class="preview-step" id="previewStep" hidden><div class="preview-frame"><img id="previewImage" alt="Selected flood photo preview"><button id="removePhoto" class="image-remove" aria-label="Remove photo"><svg><use href="#i-close"/></svg></button></div><div class="photo-meta"><strong id="fileName">flood-photo.jpg</strong><span id="fileSize">Ready for analysis</span></div><div class="analysis-note"><span>✦</span><p><strong>Look for a reference object</strong><br>Jol uses objects like kerbs and tyres to make a better estimate.</p></div><button class="primary-button full" id="analyseBtn" type="button">Analyse this photo <svg><use href="#i-chevron"/></svg></button></div><div class="loading-step" id="loadingStep" hidden><div class="loader"><span></span><span></span><span></span></div><h3>Reading the street...</h3><p>Comparing water level with reference objects in your photo.</p><div class="progress"><span></span></div><small>This usually takes a few seconds</small></div><div class="result-step" id="resultStep" hidden><div class="result-icon"><svg><use href="#i-check"/></svg></div><span class="modal-kicker">ANALYSIS COMPLETE</span><h2>Looks passable with care</h2><div class="depth-result"><span>Estimated water depth</span><strong>0.45 m</strong><em>about knee height</em></div><p>Cars and two-wheelers may pass slowly. Avoid if your vehicle has low clearance.</p><button class="primary-button full" id="publishBtn" type="button">Publish to live map <svg><use href="#i-pin"/></svg></button><button class="text-button centered" id="doneBtn" type="button">Done</button></div></section></div>
+   <div class="city-picker" id="cityPicker" hidden><section class="city-picker-card" role="dialog" aria-modal="true" aria-labelledby="cityPickerTitle"><button class="modal-close" id="closeCityPicker" aria-label="Close"><svg><use href="#i-close"/></svg></button><p class="eyebrow">YOUR CITY</p><h2 id="cityPickerTitle">Choose a location</h2><p class="picker-copy">Reports are community-reported and shown for the selected area.</p><div class="city-options" id="cityOptions"></div><div class="custom-location" id="customLocation" hidden><label for="customLocationInput">Place or address</label><input id="customLocationInput" placeholder="e.g. Koramangala, Bengaluru"><button class="primary-button full" id="saveCustomLocation" type="button">Use this location</button></div><button class="secondary-button full" id="useGeolocation" type="button"><svg><use href="#i-locate"/></svg> Use my current location</button></section></div>
+   <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-icon"><svg><use href="#i-check"/></svg></span><span id="toastText">Report added to the live map.</span></div>
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+   <script src="app.js"></script>
+</body>
+</html>
